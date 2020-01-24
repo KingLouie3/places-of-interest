@@ -1,5 +1,7 @@
 {
   "name": "Places-Front",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
