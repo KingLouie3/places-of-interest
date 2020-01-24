@@ -14,7 +14,8 @@ export class MapComponent implements AfterViewInit{
   @ViewChild('mapContainer', { static: false }) gmap: ElementRef;
   map: google.maps.Map;
   
-
+  lat;
+  lng;
   LatLng = new google.maps.LatLng(this.lat, this.lng);
   
   mapOptions: google.maps.MapOptions = {
@@ -33,13 +34,14 @@ export class MapComponent implements AfterViewInit{
   }
 
   mapInitializer() {
-    this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions);
+    this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions); {
+
     this.geolocation.getCurrentPosition().then(resp => {
-      let LatLng = new google.maps.LatLng(resp.coords.latitude,  resp.coords.longitude)
-      this.map.setCenter(LatLng);
-      this.marker.setMap(LatLng);
+      this.LatLng = new google.maps.LatLng(resp.coords.latitude,  resp.coords.longitude)
+      this.map.setCenter(this.LatLng);
+      this.marker.setMap(this.map);
     });
     
-    
+  }
   }
  }
