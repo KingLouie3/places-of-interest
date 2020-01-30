@@ -1,47 +1,68 @@
-import { Geolocation } from '@ionic-native/geolocation/ngx';
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Platform } from '@ionic/angular';
+import { Geolocation } from "@ionic-native/geolocation/ngx";
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  ViewChild,
+  ElementRef
+} from "@angular/core";
 
 declare var google;
+
 @Component({
-  selector: 'app-map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
+  selector: "app-map",
+  templateUrl: "./map.component.html",
+  styleUrls: ["./map.component.scss"]
 })
-export class MapComponent implements AfterViewInit{
+export class MapComponent implements OnInit {
+  constructor(private geolocation: Geolocation, private platform: Platform) {}
   
-  constructor(private geolocation: Geolocation) {}
-  title = 'angular-gmap';
-  @ViewChild('mapContainer', { static: false }) gmap: ElementRef;
-  map: google.maps.Map;
-  
+  title = "angular-gmap";
+  @ViewChild("mapContainer", { static: true }) gmap: ElementRef;
+  map;
+
   lat;
   lng;
-  LatLng = new google.maps.LatLng(this.lat, this.lng);
+  LatLng; 
+
   
-  mapOptions: google.maps.MapOptions = {
-   center: this.LatLng,
-   zoom: 8
-   
-  };
 
-  marker = new google.maps.Marker({
-    position: this.LatLng,
-    map: this.map,
-  });
-
-  ngAfterViewInit() {
+  ngOnInit() {
     this.mapInitializer();
   }
 
   mapInitializer() {
-    this.map = new google.maps.Map(this.gmap.nativeElement, this.mapOptions); {
-
+  //  this.platform.ready().then(() => {
+  //   let options  = {
+  //     timeout: 3000,
+  //     enableHighAccuracy: true
+  //   }
+  //  }); 
+   
+  //   }
     this.geolocation.getCurrentPosition().then(resp => {
-      this.LatLng = new google.maps.LatLng(resp.coords.latitude,  resp.coords.longitude)
-      this.map.setCenter(this.LatLng);
-      this.marker.setMap(this.map);
-    });
+      // this.lat  = resp.coords.latitude;
+      // this.lng =  resp.coords.longitude;
+      this.LatLng = new google.maps.LatLng(
+        resp.coords.latitude,
+        resp.coords.longitude
+      );
+      let mapOptions  = {
+        center: this.LatLng,
+        zoom: 15
+      };
     
+      let marker = new google.maps.Marker({
+        position: this.LatLng,
+        map: this.map
+      });
+
+      this.map = new google.maps.Map(this.gmap.nativeElement, mapOptions);
+      this.map.setCenter(this.LatLng);
+      marker.setMap(this.map);
+    
+    });
+        
   }
-  }
- }
+}
